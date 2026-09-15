@@ -3,6 +3,7 @@
 from .configuration import load_scoring_config, scoring_config_from_mapping
 from .engine import CurationEngine
 from .exceptions import ConfigurationError, ConstraintError, CurationError
+from .matching import ExactSignalMatcher, SignalMatcher
 from .models import (
     Constraint,
     Context,
@@ -22,10 +23,12 @@ __all__ = [
     "CurationError",
     "CurationResult",
     "Explanation",
+    "ExactSignalMatcher",
     "Item",
     "load_scoring_config",
     "Operator",
     "ScoringConfig",
+    "SignalMatcher",
     "scoring_config_from_mapping",
 ]
 

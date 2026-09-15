@@ -37,16 +37,6 @@ def available_values(item: Item, fields: Iterable[str]) -> set[str]:
     return values
 
 
-def match_signals(
-    desired: Iterable[str], available: set[str], source: str
-) -> tuple[SignalMatch, ...]:
-    """Compare desired signals with the item's structured vocabulary."""
-    return tuple(
-        SignalMatch(signal=value, matched=normalize(value) in available, source=source)
-        for value in desired
-    )
-
-
 def component_score(matches: Iterable[SignalMatch]) -> float:
     """Return matched/desired, with a neutral zero for absent input."""
     materialized = tuple(matches)

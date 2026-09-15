@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from .constraints import evaluate_constraint
+from .matching import ExactSignalMatcher, SignalMatcher
 from .models import (
     ConstraintCheck,
     Context,
@@ -16,14 +17,19 @@ from .models import (
     ScoringConfig,
     SignalMatch,
 )
-from .scoring import available_values, component_score, match_signals
+from .scoring import available_values, component_score
 
 
 class CurationEngine:
     """Filter, score, rank and explain arbitrary structured items."""
 
-    def __init__(self, config: ScoringConfig | None = None) -> None:
+    def __init__(
+        self,
+        config: ScoringConfig | None = None,
+        matcher: SignalMatcher | None = None,
+    ) -> None:
         self.config = config or ScoringConfig()
+        self.matcher = matcher or ExactSignalMatcher()
 
     def curate(
         self, items: Iterable[Item], context: Context, limit: int | None = None
@@ -49,12 +55,12 @@ class CurationEngine:
         context: Context,
         checks: tuple[ConstraintCheck, ...],
     ) -> CurationResult:
-        intent = match_signals(
+        intent = self.matcher.match(
             context.intent,
             available_values(item, self.config.intent_fields),
             "intent",
         )
-        preferences = match_signals(
+        preferences = self.matcher.match(
             context.preferences,
             available_values(item, self.config.preference_fields),
             "preferences",
@@ -63,7 +69,9 @@ class CurationEngine:
         for key, desired in context.signals.items():
             fields = self.config.context_fields.get(key, (key,))
             contextual.extend(
-                match_signals(desired, available_values(item, fields), f"context:{key}")
+                self.matcher.match(
+                    desired, available_values(item, fields), f"context:{key}"
+                )
             )
         groups = {
             "intent": intent,
