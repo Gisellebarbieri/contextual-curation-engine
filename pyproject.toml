@@ -21,6 +21,10 @@ classifiers = [
 ]
 dependencies = []
 
+[project.urls]
+Repository = "https://github.com/Gisellebarbieri/contextual-curation-engine"
+Issues = "https://github.com/Gisellebarbieri/contextual-curation-engine/issues"
+
 [project.optional-dependencies]
 dev = [
   "mypy>=1.10",
