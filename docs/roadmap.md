@@ -1,6 +1,6 @@
 # Roadmap
 
-Version 0.2 is the current feature release under development. Later stages are design directions, not advertised features.
+Version 0.2 is the current implemented release. Later stages are design directions, not advertised features.
 
 ## v0.1.1 — Initial public release
 
@@ -8,7 +8,7 @@ Structured items and context, hard constraints, configurable component weights, 
 
 ## v0.2 — Pairwise compatibility
 
-Extend exact matching with optional, provider-neutral pairwise compatibility for unresolved requested signals and catalog evidence. Preserve deterministic constraints and scoring while distinguishing model-derived support, neutral evidence, and contradiction.
+Extends exact matching with optional, provider-neutral pairwise compatibility for unresolved requested signals and catalog evidence. Preserves deterministic constraints and scoring while distinguishing model-derived support, neutral evidence, and contradiction.
 
 ## Future — Semantic retrieval at catalog scale
 

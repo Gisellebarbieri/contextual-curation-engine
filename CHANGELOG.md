@@ -4,6 +4,8 @@ All notable changes will be documented here. This project follows [Semantic Vers
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-20
+
 ### Added
 
 - Exact-first, provider-neutral pairwise compatibility for unresolved signals.
