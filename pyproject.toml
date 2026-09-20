@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "contextual-curation"
-version = "0.1.1"
+version = "0.2.0"
 description = "Explainable, deterministic contextual curation for arbitrary items."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -30,6 +30,11 @@ dev = [
   "mypy>=1.10",
   "pytest>=8.0",
   "ruff>=0.5",
+]
+compatibility = [
+  "sentencepiece>=0.2",
+  "torch>=2.2",
+  "transformers>=4.40,<6",
 ]
 
 [tool.hatch.build.targets.wheel]
