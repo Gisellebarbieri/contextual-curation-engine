@@ -44,3 +44,4 @@ For configuration already decoded by another system, use `scoring_config_from_ma
 
 The loader reads local UTF-8 JSON only. It does not resolve remote files, interpolate environment variables, instantiate Python objects, or execute configuration content.
 
+Compatibility is selected in Python by supplying a matcher; it is intentionally not serialized into `ScoringConfig`. Component fields and weights remain the same in exact and compatibility modes.

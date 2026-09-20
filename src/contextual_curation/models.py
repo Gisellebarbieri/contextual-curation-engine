@@ -106,12 +106,47 @@ class ScoringConfig:
 
 
 @dataclass(frozen=True)
+class SignalEvidence:
+    """Calculation evidence for one requested-signal/catalog-value pair."""
+
+    requested_signal: str
+    catalog_value: str | None
+    source: str
+    method: str
+    interpretation: str
+    scoring_strength: float
+    model_id: str | None = None
+    model_revision: str | None = None
+    direction: str | None = None
+    raw_label: str | None = None
+    distribution: Mapping[str, float] | None = None
+
+    def __post_init__(self) -> None:
+        if self.distribution is not None:
+            object.__setattr__(
+                self, "distribution", MappingProxyType(dict(self.distribution))
+            )
+
+
+@dataclass(frozen=True)
 class SignalMatch:
-    """One desired value and whether the item supplied it."""
+    """One requested signal and its aggregated scoring consequence."""
 
     signal: str
     matched: bool
     source: str
+    strength: float | None = None
+    evidence: Sequence[SignalEvidence] = field(default_factory=tuple)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "evidence", tuple(self.evidence))
+
+    @property
+    def scoring_strength(self) -> float:
+        """Return the deterministic value used in component scoring."""
+        if self.strength is not None:
+            return self.strength
+        return float(self.matched)
 
 
 @dataclass(frozen=True)

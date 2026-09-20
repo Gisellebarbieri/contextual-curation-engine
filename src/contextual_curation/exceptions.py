@@ -12,3 +12,7 @@ class ConfigurationError(CurationError, ValueError):
 class ConstraintError(CurationError, ValueError):
     """Raised when a constraint cannot be evaluated."""
 
+
+class CompatibilityProviderError(CurationError):
+    """Raised when pairwise compatibility evaluation cannot be completed."""
+

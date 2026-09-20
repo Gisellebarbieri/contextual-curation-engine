@@ -33,7 +33,7 @@ Two deliberately different domains demonstrate that the curation logic belongs t
 
 Many digital experiences still rely on static collections, filters, popularity, simple similarity, or historical behavior alone. Yet a good item is not necessarily right for every situation.
 
-This project explores how context can improve a conventional decision without turning it into an opaque model. Version 0.1.1 is intentionally deterministic: structured attributes and context go in; eligible, ranked, explainable results come out.
+This project explores how context can improve a conventional decision without turning it into an opaque model. Version 0.2 keeps the deterministic engine and adds optional pairwise compatibility when exact matching cannot see relevant product meaning.
 
 ## Five-minute quickstart
 
@@ -86,15 +86,41 @@ python examples/furniture/curate.py
 python examples/books/curate.py
 ```
 
+Exact mode remains dependency-free. To use the optional local compatibility provider:
+
+```bash
+python -m pip install -e ".[compatibility]"
+```
+
+```python
+from contextual_curation.compatibility import CompatibilitySignalMatcher
+from contextual_curation.providers.deberta import DebertaCompatibilityProvider
+
+matcher = CompatibilitySignalMatcher(DebertaCompatibilityProvider())
+engine = CurationEngine(config=config, matcher=matcher)
+```
+
+Compatibility is exact-first. Unresolved catalog evidence is classified as `SUPPORT`, `NEUTRAL`, or `CONTRADICTION`; support contributes a deterministic `1.0`, while neutral and contradiction contribute `0.0`. This value is a scoring contribution, not model confidence. Contradictions remain visible as non-penalizing trade-off evidence.
+
+The optional reference provider uses [`cross-encoder/nli-deberta-v3-small`](https://huggingface.co/cross-encoder/nli-deberta-v3-small) at the validated revision `fa2804872c3b4bd748f38c0185cc85775361e735`; its external model card declares the Apache-2.0 license. The model is relatively large and first use may download it. NLI approximates product compatibility: pragmatic support may be classified neutral, unrelated evidence may be classified contradiction, and its class distribution is not calibrated product confidence. The isolated CI smoke job builds the package, installs the wheel with the `compatibility` extra, and initializes this pinned adapter. The frozen behavioral evaluation remains a separate validation because it downloads and runs the full model against all 24 pairs. Run the compatibility demonstrations with:
+
+```bash
+python examples/furniture/curate_compatibility.py
+python examples/books/curate_compatibility.py
+```
+
 ## How it works
 
 ```mermaid
 flowchart LR
     A[Items] --> E[Eligibility]
     B[Hard constraints] --> E
-    E --> S[Contextual scoring]
-    C[Intent] --> S
-    D[Preferences and context] --> S
+    E --> M[Exact matching]
+    C[Intent] --> M
+    D[Preferences and context] --> M
+    M -->|unresolved, optional| P[Pairwise compatibility]
+    M --> S[Contextual scoring]
+    P --> S
     S --> R[Deterministic ranking]
     R --> X[Evidence and trade-offs]
     X --> O[Curated selection]
@@ -103,7 +129,9 @@ flowchart LR
 The engine keeps four concerns separate:
 
 - **Hard constraints** decide eligibility and never add points.
-- **Intent, preference, and context components** measure matched requested signals divided by requested signals.
+- **Exact matching** remains the default and resolves normalized structured values first.
+- **Optional compatibility** classifies unresolved evidence as support, neutral, or contradiction; semantic relatedness alone never creates relevance.
+- **Intent, preference, and context components** measure supported requested signals divided by requested signals.
 - **Configurable weights** are validated and normalized before components are combined.
 - **Explanations** expose the exact matches, misses, constraint checks, and weighted contributions used in ranking.
 
@@ -149,7 +177,7 @@ This project treats intelligence as a product capability rather than an AI featu
 
 ## Scope
 
-Version 0.1.1 includes structured curation, constraints, scoring, ranking, explanations, JSON configuration, and furniture and books examples. It does **not** include embeddings, LLM interpretation, image analysis, behavioral learning, or a UI. Those capabilities are described only in the [roadmap](docs/roadmap.md).
+Version 0.2 includes structured curation, constraints, exact-first pairwise compatibility, scoring, ranking, explanations, JSON configuration, and furniture and books examples. It does **not** include embeddings, semantic retrieval, LLM interpretation, image analysis, behavioral learning, or a UI. Those capabilities are described only in the [roadmap](docs/roadmap.md).
 
 The `Item` abstraction is domain-independent. Furniture and books are demonstrations; travel, content, courses, and other domains can provide their own attributes and configuration.
 
@@ -162,7 +190,7 @@ mypy
 pytest
 ```
 
-Python 3.10 or later is supported. The runtime package has no third-party dependencies.
+Python 3.10 or later is supported. The base runtime has no third-party dependencies; ML packages are confined to the optional `compatibility` extra.
 
 ## Documentation
 

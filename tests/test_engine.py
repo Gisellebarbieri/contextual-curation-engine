@@ -7,6 +7,7 @@ from contextual_curation import (
     Constraint,
     Context,
     CurationEngine,
+    ExactSignalMatcher,
     Item,
     Operator,
     ScoringConfig,
@@ -129,3 +130,18 @@ def test_nested_attributes_and_contains_operator() -> None:
 def test_negative_limit_fails() -> None:
     with pytest.raises(ValueError, match="limit"):
         CurationEngine().curate([], Context(), limit=-1)
+
+
+def test_explicit_exact_matcher_preserves_default_behavior() -> None:
+    context = Context(intent=["low-profile"], preferences=["visually_quiet"])
+    candidate = item(
+        "chair", purposes=["low profile"], traits=["VISUALLY QUIET"]
+    )
+
+    default_result = CurationEngine().curate([candidate], context)[0]
+    explicit_result = CurationEngine(matcher=ExactSignalMatcher()).curate(
+        [candidate], context
+    )[0]
+
+    assert explicit_result == default_result
+    assert explicit_result.score == 0.7

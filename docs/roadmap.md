@@ -1,14 +1,18 @@
 # Roadmap
 
-Only v0.1 is implemented. Later stages are design directions, not advertised features.
+Version 0.2 is the current feature release under development. Later stages are design directions, not advertised features.
 
 ## v0.1.1 — Initial public release
 
 Structured items and context, hard constraints, configurable component weights, deterministic ranking, evidence, trade-offs, JSON configuration, and furniture and books examples.
 
-## v0.2 — Semantic curation
+## v0.2 — Pairwise compatibility
 
-Add provider-neutral embedding and similarity interfaces. Preserve structured constraints and expose semantic evidence separately from exact matches.
+Extend exact matching with optional, provider-neutral pairwise compatibility for unresolved requested signals and catalog evidence. Preserve deterministic constraints and scoring while distinguishing model-derived support, neutral evidence, and contradiction.
+
+## Future — Semantic retrieval at catalog scale
+
+Investigate embedding-based candidate retrieval only when catalog size makes direct pairwise evaluation materially inefficient. Retrieval may narrow evidence before compatibility classification; similarity itself must not become positive relevance evidence.
 
 ## v0.3 — Context interpreter
 

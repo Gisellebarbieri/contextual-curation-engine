@@ -24,3 +24,23 @@ jobs:
       - run: mypy
       - run: pytest
 
+  compatibility-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install build
+      - run: python -m build
+      - name: Install wheel with optional compatibility dependencies
+        run: |
+          WHEEL=$(find dist -name '*.whl' -print -quit)
+          python -m pip install "${WHEEL}[compatibility]"
+      - name: Initialize the pinned reference adapter
+        run: >-
+          python -c "from contextual_curation.providers.deberta import
+          DEFAULT_MODEL_REVISION, DebertaCompatibilityProvider;
+          provider = DebertaCompatibilityProvider();
+          assert provider.model_revision == DEFAULT_MODEL_REVISION"
