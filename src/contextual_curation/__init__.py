@@ -2,7 +2,12 @@
 
 from .configuration import load_scoring_config, scoring_config_from_mapping
 from .engine import CurationEngine
-from .exceptions import ConfigurationError, ConstraintError, CurationError
+from .exceptions import (
+    CompatibilityProviderError,
+    ConfigurationError,
+    ConstraintError,
+    CurationError,
+)
 from .matching import ExactSignalMatcher, SignalMatcher
 from .models import (
     Constraint,
@@ -15,6 +20,7 @@ from .models import (
 )
 
 __all__ = [
+    "CompatibilityProviderError",
     "ConfigurationError",
     "Constraint",
     "ConstraintError",
@@ -32,4 +38,4 @@ __all__ = [
     "scoring_config_from_mapping",
 ]
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
