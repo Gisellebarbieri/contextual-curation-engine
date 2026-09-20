@@ -102,7 +102,7 @@ engine = CurationEngine(config=config, matcher=matcher)
 
 Compatibility is exact-first. Unresolved catalog evidence is classified as `SUPPORT`, `NEUTRAL`, or `CONTRADICTION`; support contributes a deterministic `1.0`, while neutral and contradiction contribute `0.0`. This value is a scoring contribution, not model confidence. Contradictions remain visible as non-penalizing trade-off evidence.
 
-The reference provider is optional and relatively large. Its NLI model approximates product compatibility: pragmatic support may be classified neutral, unrelated evidence may be classified contradiction, and its class distribution is not calibrated product confidence. First use may download the model. Run the compatibility demonstrations with:
+The optional reference provider uses [`cross-encoder/nli-deberta-v3-small`](https://huggingface.co/cross-encoder/nli-deberta-v3-small) at the validated revision `fa2804872c3b4bd748f38c0185cc85775361e735`; its external model card declares the Apache-2.0 license. The model is relatively large and first use may download it. NLI approximates product compatibility: pragmatic support may be classified neutral, unrelated evidence may be classified contradiction, and its class distribution is not calibrated product confidence. The frozen behavioral evaluation downloads and runs the full model against all 24 pairs. Run the compatibility demonstrations with:
 
 ```bash
 python examples/furniture/curate_compatibility.py

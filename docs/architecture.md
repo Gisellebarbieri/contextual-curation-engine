@@ -52,4 +52,4 @@ Items tied on score are sorted by `item.id`. Every explanation is assembled from
 
 The core owns validation, aggregation, scoring, and explanation consequences. An optional provider owns model loading, tokenization, input ordering, inference, label mapping, and model metadata. Provider failures abort explicitly requested compatibility execution; the engine never silently falls back to exact-only ranking.
 
-The reference DeBERTa NLI adapter is replaceable and does not define compatibility itself. NLI is an approximation: neutral may include pragmatic support the model did not infer, contradiction is not a hard constraint, and class distributions are diagnostic rather than calibrated confidence.
+The reference DeBERTa NLI adapter is replaceable and does not define compatibility itself. Its default model revision is pinned to `fa2804872c3b4bd748f38c0185cc85775361e735`, the artifact used by the frozen behavioral gate. NLI is an approximation: neutral may include pragmatic support the model did not infer, contradiction is not a hard constraint, and class distributions are diagnostic rather than calibrated confidence.

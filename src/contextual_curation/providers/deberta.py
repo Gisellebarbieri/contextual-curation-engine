@@ -15,6 +15,7 @@ from ..compatibility import (
 from ..exceptions import CompatibilityProviderError
 
 DEFAULT_MODEL_ID = "cross-encoder/nli-deberta-v3-small"
+DEFAULT_MODEL_REVISION = "fa2804872c3b4bd748f38c0185cc85775361e735"
 _import_module = importlib.import_module
 
 
@@ -44,12 +45,17 @@ class DebertaCompatibilityProvider:
                 "install contextual-curation[compatibility]"
             ) from error
 
+        requested_revision = revision or (
+            DEFAULT_MODEL_REVISION if model_id == DEFAULT_MODEL_ID else None
+        )
         try:
             self._tokenizer = transformers.AutoTokenizer.from_pretrained(
-                model_id, revision=revision
+                model_id, revision=requested_revision
             )
             model_class = transformers.AutoModelForSequenceClassification
-            self._model = model_class.from_pretrained(model_id, revision=revision)
+            self._model = model_class.from_pretrained(
+                model_id, revision=requested_revision
+            )
             self._model.eval()
         except Exception as error:
             raise CompatibilityProviderError(
@@ -58,8 +64,8 @@ class DebertaCompatibilityProvider:
 
         self._model_id = model_id
         resolved = getattr(self._model.config, "_commit_hash", None)
-        self._model_revision = revision or (
-            str(resolved) if resolved is not None else None
+        self._model_revision = (
+            str(resolved) if resolved is not None else requested_revision
         )
         self._batch_size = batch_size
         self._labels = self._resolve_labels(self._model.config.id2label)
