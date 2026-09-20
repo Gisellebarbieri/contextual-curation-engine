@@ -4,6 +4,19 @@ All notable changes will be documented here. This project follows [Semantic Vers
 
 ## [Unreleased]
 
+### Added
+
+- Exact-first, provider-neutral pairwise compatibility for unresolved signals.
+- Structured support, neutral, contradiction, and mixed evidence.
+- Optional local DeBERTa NLI reference provider through the `compatibility` extra.
+- Batched compatibility evaluation and a frozen provider behavioral regression set.
+- Furniture and books compatibility examples.
+
+### Changed
+
+- Advanced scoring from exact-only matches to deterministic binary support while preserving exact-mode behavior.
+- Reframed the v0.2 roadmap around compatibility rather than embedding similarity.
+
 ## [0.1.1] - 2026-09-15
 
 ### Added
